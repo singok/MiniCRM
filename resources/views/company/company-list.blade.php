@@ -48,16 +48,11 @@
                                     <span class="h4"><b>Add/edit company</b></span>
                                 </div>
                                 <div class="card-body">
-                                    <form action="{{ route('companies.add') }}" method="POST" id="companyForm"
-                                        enctype="multipart/form-data">
+                                    <form method="POST" id="companyForm" enctype="multipart/form-data">
                                         @csrf
                                         <div class="input-group mb-2">
                                             <input type="text" class="form-control" placeholder="Name" name="name">
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i class="fa-solid fa-industry"></i>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         @error('name')
                                             <div class="text-danger">
@@ -66,11 +61,7 @@
                                         @enderror
                                         <div class="input-group mb-2">
                                             <input type="email" class="form-control" placeholder="Email" name="email">
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <span class="fas fa-envelope"></span>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         @error('email')
                                             <div class="text-danger">
@@ -79,11 +70,7 @@
                                         @enderror
                                         <div class="input-group mb-2">
                                             <input type="text" class="form-control" placeholder="Website" name="website">
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i class="fa-solid fa-sitemap"></i>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         @error('website')
                                             <div class="text-danger">
@@ -128,11 +115,7 @@
                                         @enderror
                                         <div class="input-group mb-2">
                                             <input type="file" class="form-control" placeholder="file" name="logo">
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">
-                                                    <i class="fa-solid fa-file-arrow-down"></i>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         @error('logo')
                                             <div class="text-danger">
@@ -149,7 +132,7 @@
                                             <div class="col-4"></div>
                                             <!-- /.col -->
                                             <div class="col-4">
-                                                <button type="submit" class="btn btn-success btn-block saveButton"><i
+                                                <button type="submit" class="btn btn-primary btn-block saveButton"><i
                                                         class="fa-solid fa-floppy-disk""></i>&nbsp;&nbsp;Save</button>
                                             </div>
                                             <!-- /.col -->
@@ -168,7 +151,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Website</th>
@@ -178,25 +160,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($companyInfo as $comp)
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>{{ $comp->name }}</td>
-                                        <td>{{ $comp->email }}</td>
-                                        <td>{{ $comp->website }}</td>
-                                        <td>{{ $comp->province->provincename }} {{ $comp->district->districtname }}
-                                            {{ $comp->vdcormunicipalities->municipalityname }}</td>
-
-                                        <td><img src="{{ asset('storage/companylogo/' . $comp->logo) }}" height="25px"
-                                                width="25px" /></td>
-                                        <td>
-                                            <a href="#"><i class="fa-solid fa-pen fa-lg mr-1"
-                                                    style="color:blue"></i></a>
-                                            <a href="#" class="removeCompany"><i
-                                                    class="fa-solid fa-delete-left fa-lg ml-1" style="color:red"></i></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <!-- Data goes here -->
                             </tbody>
                         </table>
                     </section>
@@ -215,44 +179,11 @@
             <b>Version</b> 3.2.0
         </div>
     </footer>
-
-    <!-- delete modal-->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Do you want to remove company detail ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
-                    <button type="button" class="btn btn-secondary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('script')
     <script>
         $(document).ready(function() {
-            // display delete confirmation box
-            $('.removeCompany').on('click', function() {
-                $('#deleteModal').modal('show');
-            });
-            $('.removeCompany').on('click', function() {
-                $('#deleteModal').modal('show');
-            });
-            $('.removeCompany').on('click', function() {
-                $('#deleteModal').modal('show');
-            });
-
             // get loaded data
             function getOptions(infoData, url) {
                 return $.ajax({
@@ -289,46 +220,90 @@
                 });
             });
 
+            // load tables
+            function loadTable() {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '{{ route('companies.loadtable') }}',
+                    type: 'POST',
+                    success: function(data) {
+                        $('tbody').html(data);
+                    }
+                });
+            }
+            loadTable();
+
             // insert form values
-            // $(document).on('click', '.saveButton', function(e) {
-            //     var url = '{{ route('companies.add') }}';
-            //     $('#companyForm').validate({
-            //         // initialize the plugin
-            //         rules: {
-            //             name: {
-            //                 required: true
-            //             },
-            //             email: {
-            //                 required: true
-            //             },
-            //             website: {
-            //                 required: true
-            //             },
-            //             province: {
-            //                 required: true
-            //             },
-            //             district: {
-            //                 required: true
-            //             },
-            //             vdcormunicipality: {
-            //                 required: true
-            //             },
-            //             logo: {
-            //                 required: true
-            //             }
-            //         }
-            //     });
-            //     if ($('#companyForm').valid()) {
-            //         $('#companyForm').ajaxSubmit({
-            //             type: 'post',
-            //             url: url,
-            //             dataType: 'json',
-            //             success: function(response) {
-            //                 console.log(response);
-            //             }
-            //         });
-            //     }
-            // });
+            $('#companyForm').submit(function(e) {
+                e.preventDefault();
+                var url = '{{ route('companies.add') }}';
+                $(this).validate({
+                    rules: {
+                        name: "required",
+                        email: {
+                            email: true,
+                            required: true
+                        },
+                        website: "required",
+                        province: "required",
+                        district: "required",
+                        vdcormunicipality: "required",
+                        logo: "required",
+                    },
+                    messages: {
+                        email: {
+                            required: "Please enter your email address",
+                            email: "Please enter valid email address"
+                        }
+                    }
+                });
+                if ($('#companyForm').valid()) {
+                    var formdata = new FormData($('#companyForm')[0]);
+                    var url = '{{ route('companies.add') }}';
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: url,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            $('#companyForm').find('input').val('');
+                            alert(data.success);
+                            loadTable();
+                        }
+                    });
+                }
+            });
+
+            // delete company detail
+            $(document).on('click', '.removeCompany', function() {
+                var isClicked = confirm('Are you sure want to delete company ?');
+                if (isClicked == true) {
+                    var companyid = $(this).data('id');
+                    var url = '{{ route('companies.delete') }}'
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            id: companyid
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            loadTable();
+                        }
+                    });
+                }
+            });
+
         });
     </script>
 @endpush

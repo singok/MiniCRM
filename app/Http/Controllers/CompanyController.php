@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Province;
 use DB;
 use App\Models\Company;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -17,8 +18,7 @@ class CompanyController extends Controller
     public function index()
     {
         $province = Province::all();
-        $companyDetails = Company::with('province', 'district', 'vdcormunicipalities')->get();
-        return view('company.company-list', [ 'dataInfo' => $province, 'companyInfo' => $companyDetails]);
+        return view('company.company-list', [ 'dataInfo' => $province]);
     }
 
     // load districts
@@ -45,15 +45,6 @@ class CompanyController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -85,9 +76,15 @@ class CompanyController extends Controller
             'vdcormunicipalityid' => $request->vdcormunicipality
         ]);
         if(!empty($fileStored) && !empty($info)) {
-            return back()->with('success', 'Data Inserted Successfully.');
+            return response()->json([
+                'status' => 200,
+                'success' => 'Data Inserted Successfully'
+            ]);
         } else {
-            return back()->with('error', 'Something went wrong.');
+            return response()->json([
+                'status' => 400,
+                'error' => 'Something went wrong'
+            ]);
         }
     }
 
@@ -97,9 +94,32 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $companyDetails = Company::with('province', 'district', 'vdcormunicipalities')->get();
+        $value = "";
+        if ($companyDetails) {
+            foreach ($companyDetails as $comp) {
+                $value .= "<tr>
+                <td>".$comp->name."</td>
+                <td>".$comp->email."</td>
+                <td>".$comp->website."</td>
+                <td>".$comp->province->provincename." ".$comp->district->districtname." ".
+                    $comp->vdcormunicipalities->municipalityname."</td>
+
+                <td><img src='".asset('storage/companylogo/'.$comp->logo)."' height='25px'
+                        width='25px' /></td>
+                <td>
+                    <a href='#'><i class='fa-solid fa-pen fa-lg mr-1'
+                            style='color:blue'></i></a>
+                    <a href='#' data-id='".$comp->id."' class='removeCompany'><i
+                            class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>
+                </td>
+            </tr>";
+            }
+
+            echo $value;
+        }
     }
 
     /**
@@ -131,8 +151,16 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $company = Company::where('id', $request->id)->first();
+        $deleted = Storage::delete('public/companylogo/'.$company->logo);
+        $info = Company::where('id', $request->id)->delete();
+        if (!empty($deleted) && !empty($info)) {
+            return response()->json([
+                'status' => 200,
+                'success' => 'Company Detail Deleted Successfully.'
+            ]);
+        }
     }
 }

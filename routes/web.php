@@ -17,4 +17,6 @@ Route::controller(CompanyController::class)->prefix('admin/companies')->group(fu
     Route::post('add-company', 'store')->name('companies.add');
     Route::post('districts', 'loadDistricts')->name('companies.districts');
     Route::post('vdcormunicipality', 'loadVdc')->name('companies.vdcormunicipality');
+    Route::post('table/load', 'show')->name('companies.loadtable');
+    Route::post('company/delete', 'destroy')->name('companies.delete');
 });
