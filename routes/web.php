@@ -1,17 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\CompanyController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,3 +10,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/*--------------------Company Controller---------------------*/
+Route::controller(CompanyController::class)->prefix('admin/companies')->group(function () {
+    Route::get('/', 'index')->name('companies.list');
+    Route::post('add-company', 'store')->name('companies.add');
+    Route::post('districts', 'loadDistricts')->name('companies.districts');
+    Route::post('vdcormunicipality', 'loadVdc')->name('companies.vdcormunicipality');
+});
