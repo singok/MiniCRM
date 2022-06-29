@@ -63,28 +63,54 @@ class CompanyController extends Controller
             'district' => 'required',
             'vdcormunicipality'  => 'required',
         ]);
-        $filename = time().$request->file('logo')->getClientOriginalName();
-        $fileStored = $request->file('logo')->storeAs('public/companylogo', $filename);
 
-        $info = Company::create([
-            'name' => $request->name,
-            'website' => $request->website,
-            'logo' => $filename,
-            'email' => $request->email,
-            'provinceid' => $request->province,
-            'districtid' => $request->district,
-            'vdcormunicipalityid' => $request->vdcormunicipality
-        ]);
-        if(!empty($fileStored) && !empty($info)) {
-            return response()->json([
-                'status' => 200,
-                'success' => 'Data Inserted Successfully'
+        $isCompany = $request->comid;
+
+        if(empty($isCompany)) {
+
+            // insert fresh company data
+            $filename = time().$request->file('logo')->getClientOriginalName();
+            $fileStored = $request->file('logo')->storeAs('public/companylogo', $filename);
+
+            $info = Company::create([
+                'name' => $request->name,
+                'website' => $request->website,
+                'logo' => $filename,
+                'email' => $request->email,
+                'provinceid' => $request->province,
+                'districtid' => $request->district,
+                'vdcormunicipalityid' => $request->vdcormunicipality
             ]);
+            if(!empty($fileStored) && !empty($info)) {
+                return response()->json([
+                    'status' => 200,
+                    'success' => 'Data Inserted Successfully'
+                ]);
+            }
         } else {
-            return response()->json([
-                'status' => 400,
-                'error' => 'Something went wrong'
+
+            // update company details
+            $delete = Company::where('id', $isCompany)->get();
+            Storage::delete('public/companylogo/'.$delete->logo);
+
+            $filename = time().$request->file('logo')->getClientOriginalName();
+            $fileStored = $request->file('logo')->storeAs('public/companylogo', $filename);
+
+            $info = Company::where('id', $isCompany)->update([
+                'name' => $request->name,
+                'website' => $request->website,
+                'logo' => $filename,
+                'email' => $request->email,
+                'provinceid' => $request->province,
+                'districtid' => $request->district,
+                'vdcormunicipalityid' => $request->vdcormunicipality
             ]);
+            if(!empty($fileStored) && !empty($info)) {
+                return response()->json([
+                    'status' => 200,
+                    'success' => 'Data Updated Successfully'
+                ]);
+            }
         }
     }
 
@@ -110,7 +136,7 @@ class CompanyController extends Controller
                 <td><img src='".asset('storage/companylogo/'.$comp->logo)."' height='25px'
                         width='25px' /></td>
                 <td>
-                    <a href='#'><i class='fa-solid fa-pen fa-lg mr-1'
+                    <a href='#' data-id='".$comp->id."' class='editCompany'><i class='fa-solid fa-pen fa-lg mr-1'
                             style='color:blue'></i></a>
                     <a href='#' data-id='".$comp->id."' class='removeCompany'><i
                             class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>
@@ -128,9 +154,21 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $company = Company::with('province', 'district', 'vdcormunicipalities')->where('id', $request->id)->first();
+        if ($company) {
+            return response()->json([
+                'companyid' => $company->id,
+                'companyname' => $company->name,
+                'companyemail' => $company->email,
+                'companyprovince' => $company->provinceid,
+                'companydistrict' => $company->districtid,
+                'companyvdc' => $company->vdcormunicipalityid,
+                'companywebsite' => $company->website,
+                'companylogo' => $company->logo
+            ]);
+        }
     }
 
     /**

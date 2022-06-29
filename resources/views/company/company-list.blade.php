@@ -48,11 +48,11 @@
                                     <span class="h4"><b>Add/edit company</b></span>
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST" id="companyForm" enctype="multipart/form-data">
+                                    <form method="POST" id="companyForm" enctype="multipart/form-data" autocomplete="off">
                                         @csrf
+                                        <input type="hidden" class="form-control hiddenid" name="comid">
                                         <div class="input-group mb-2">
                                             <input type="text" class="form-control" placeholder="Name" name="name">
-
                                         </div>
                                         @error('name')
                                             <div class="text-danger">
@@ -115,7 +115,6 @@
                                         @enderror
                                         <div class="input-group mb-2">
                                             <input type="file" class="form-control" placeholder="file" name="logo">
-
                                         </div>
                                         @error('logo')
                                             <div class="text-danger">
@@ -181,9 +180,10 @@
     </footer>
 @endsection
 
-@push('script')
+@section('script')
     <script>
         $(document).ready(function() {
+
             // get loaded data
             function getOptions(infoData, url) {
                 return $.ajax({
@@ -253,9 +253,27 @@
                         logo: "required",
                     },
                     messages: {
+                        name: {
+                            required: "Please enter company name",
+                        },
                         email: {
-                            required: "Please enter your email address",
-                            email: "Please enter valid email address"
+                            required: "Please enter company email address",
+                            email: "Please enter valid email address",
+                        },
+                        website: {
+                            required: "Please enter website url",
+                        },
+                        province: {
+                            required: "Please select province name",
+                        },
+                        district: {
+                            required: "Please select district name",
+                        },
+                        vdcormunicipality: {
+                            required: "Please select municipality name",
+                        },
+                        logo: {
+                            required: "Please choose image logo",
                         }
                     }
                 });
@@ -281,29 +299,71 @@
                 }
             });
 
-            // delete company detail
-            $(document).on('click', '.removeCompany', function() {
-                var isClicked = confirm('Are you sure want to delete company ?');
-                if (isClicked == true) {
-                    var companyid = $(this).data('id');
-                    var url = '{{ route('companies.delete') }}'
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            id: companyid
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            loadTable();
-                        }
-                    });
-                }
+            // edit company detail
+            $(document).on('click', '.editCompany', function() {
+                var companyId = $(this).data('id');
+                var url = '{{ route('companies.edit') }}'
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        id: companyId
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('input[type="hidden"]').val(data.companyid);
+                        $('input[name="name"]').val(data.companyname);
+                        $('input[name="email"]').val(data.companyemail);
+                        $('input[name="website"]').val(data.companywebsite);
+                        $('.selectedProvince').val(data.companyprovince);
+                        $('.selectDistrict').val(data.companydistrict);
+                        $('input[name="logo"]').val(data.companylogo);
+                    }
+                });
             });
 
+
+
+            // delete company detail
+            $(document).on('click', '.removeCompany', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var companyid = $(this).data('id');
+                        var url = '{{ route('companies.delete') }}'
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            url: url,
+                            type: 'POST',
+                            data: {
+                                id: companyid
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+                                loadTable();
+                            }
+                        });
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }
+                })
+            });
         });
     </script>
-@endpush
+@endsection

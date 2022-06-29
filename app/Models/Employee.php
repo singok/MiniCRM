@@ -19,7 +19,7 @@ class Employee extends Model
     ];
 
     // reverse relation with company
-    public function company() {
+    public function companies() {
         return $this->belongsTo(Company::class, 'company', 'id');
     }
 }

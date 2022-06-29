@@ -39,6 +39,9 @@
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+
     <!-- font awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
     <style type="text/css">
@@ -259,6 +262,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('emloyees.list') }}"
+                                class="nav-link @if (Request::routeIs('emloyees.list')) active @endif">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Employees
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <!-- Authentication Links -->
                             @guest
                                 @if (Route::has('login'))
@@ -332,9 +344,14 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
 
+
+    <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.4/jquery.validate.min.js"></script>
 
-    @stack('script')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @yield('script')
 </body>
 
 </html>
