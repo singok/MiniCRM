@@ -80,24 +80,36 @@ class EmployeeController extends Controller
     public function show()
     {
         $employees = Employee::with('companies')->get();
-        $value = "";
-        if ($employees) {
-            foreach($employees as $emp) {
-                $value .= "<tr>
-                <td>".$emp->firstname." ".$emp->lastname."</td>
-                <td>".$emp->companies->name."</td>
-                <td>".$emp->email."</td>
-                <td>".$emp->phone."</td>
-                <td>
-                    <a href='#' data-id='".$emp->id."' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1'
-                            style='color:blue'></i></a>
-                    <a href='#' data-id='".$emp->id."' class='removeEmployee'><i
-                            class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>
-                </td></tr>";
-            }
-
-            echo $value;
+        $empValue = array();
+        $i = 1;
+        foreach($employees as $emp) {
+            $empValue[$i]['count'] = $i++;
+            $empValue[$i]['name'] = $emp->firstname." ".$emp->lastname;
+            $empValue[$i]['company'] = $emp->companies->name;
+            $empValue[$i]['email'] = $emp->email;
+            $empValue[$i]['phone'] = $emp->phone;
+            $empValue[$i]['action'] = "<a href='#' data-id='".$emp->id."' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='".$emp->id."' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>";
         }
+        return response()->json($empValue);
+
+        // $value = "";
+        // if ($employees) {
+        //     foreach($employees as $emp) {
+        //         $value .= "<tr>
+        //         <td>".$emp->firstname." ".$emp->lastname."</td>
+        //         <td>".$emp->companies->name."</td>
+        //         <td>".$emp->email."</td>
+        //         <td>".$emp->phone."</td>
+        //         <td>
+        //             <a href='#' data-id='".$emp->id."' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1'
+        //                     style='color:blue'></i></a>
+        //             <a href='#' data-id='".$emp->id."' class='removeEmployee'><i
+        //                     class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>
+        //         </td></tr>";
+        //     }
+
+        //     echo $value;
+        // }
     }
 
     /**

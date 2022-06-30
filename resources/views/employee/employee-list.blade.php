@@ -137,7 +137,7 @@
                     <!-- /.Left col -->
                     <!-- right col (We are only adding the ID to make the widgets sortable)-->
                     <section class="col-lg-8 connectedSortable border border-warning">
-                        <table class="table">
+                        <table class="table" id="employeeTable">
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
@@ -151,6 +151,7 @@
                                 <!-- Data goes here -->
                             </tbody>
                         </table>
+
                     </section>
                     <!-- right col -->
                 </div>
@@ -175,6 +176,7 @@
 
             // load employee data
             function loadEmployee() {
+
                 var url = '{{ route('employees.load') }}'
                 $.ajax({
                     headers: {
@@ -183,12 +185,105 @@
                     url: url,
                     type: 'POST',
                     success: function(data) {
-                        $('tbody').html(data);
+                        // $('tbody').html(data);
+                        // var employeeData = data;
+                        // $('#employeeTable').DataTable({
+                        //     data: employeeData,
+                        //     columns: [{
+                        //             data: 'firstname'
+                        //         },
+                        //         {
+                        //             data: 'companies.name'
+                        //         },
+                        //         {
+                        //             data: 'email'
+                        //         },
+                        //         {
+                        //             data: 'phone'
+                        //         },
+                        //         {
+                        //             'data': 'id',
+                        //             "render": function(data, type, row, meta) {
+                        //                 return "<a href='#' data-id='" + data +
+                        //                     "' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='" +
+                        //                     data +
+                        //                     "' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style = 'color:red'></i></a>";
+                        //             }
+                        //         }
+                        //     ]
+                        // });
                     }
                 });
             }
 
             loadEmployee();
+
+            // dataTables
+            var librarybookdetailtable = $('#employeeTable').DataTable({
+                "sPaginationType": "full_numbers",
+                "bSearchable": false,
+                "lengthMenu": [
+                    [5, 10, 15, 20, 25, -1],
+                    [5, 10, 15, 20, 25, "All"]
+                ],
+                'iDisplayLength': 15,
+                "sDom": 'ltipr',
+                "bAutoWidth": false,
+                "aaSorting": [
+                    [0, 'desc']
+                ],
+                "bSort": false,
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": baseurl + "/library/book/getbookdetail",
+                "oLanguage": {
+                    "sEmptyTable": "<p class='no_data_message'>No data available.</p>"
+                },
+                "aoColumnDefs": [{
+                    "bSortable": false,
+                    "aTargets": [1]
+                }],
+                "aoColumns": [{
+                        "data": "sno"
+                    },
+                    {
+                        "data": "name"
+                    },
+                    {
+                        "data": "company"
+                    },
+                    {
+                        "data": "email"
+                    },
+                    {
+                        "data": "phone"
+                    },
+                    {
+                        "data": "action"
+                    },
+                ],
+            }).columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [null,
+                    {
+                        type: "text"
+                    },
+                    {
+                        type: "text"
+                    },
+                    {
+                        type: "text"
+                    },
+                    {
+                        type: "text"
+                    },
+                    {
+                        type: "text"
+                    },
+                ]
+            });
+
+            librarybookdetailtable.fnDraw(false);
 
             // reset button
             $('.resetButton').click(function() {

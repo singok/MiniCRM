@@ -42,12 +42,18 @@
 
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
 
+
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+
+
     <!-- font awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
     <style type="text/css">
         .error {
-            color:red;
-            width:100%;
+            color: red;
+            width: 100%;
             font-size: 14px;
             font-style: italic;
         }
@@ -64,8 +70,7 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ asset('AdminLogo.png') }}" class="img-circle elevation-2"
-                            alt="User Image">
+                        <img src="{{ asset('AdminLogo.png') }}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="{{ route('home') }}" class="d-block">{{ Auth::user()->name }}</a>
@@ -115,8 +120,8 @@
                                 <a class="nav-link" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;
-                                {{ __('Logout') }}
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;
+                                    {{ __('Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -187,7 +192,10 @@
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+
     @yield('script')
+
 </body>
 
 </html>
