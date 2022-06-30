@@ -7,6 +7,7 @@ use App\Models\Province;
 use DB;
 use App\Models\Company;
 use Illuminate\Support\Facades\Storage;
+use DataTables;
 
 class CompanyController extends Controller
 {
@@ -120,30 +121,43 @@ class CompanyController extends Controller
      */
     public function show()
     {
+        // $companyDetails = Company::with('province', 'district', 'vdcormunicipalities')->get();
+        // $value = "";
+        // if ($companyDetails) {
+        //     foreach ($companyDetails as $comp) {
+        //         $value .= "<tr>
+        //         <td>".$comp->name."</td>
+        //         <td>".$comp->email."</td>
+        //         <td>".$comp->website."</td>
+        //         <td>".$comp->province->provincename." ".$comp->district->districtname." ".
+        //             $comp->vdcormunicipalities->municipalityname."</td>
+
+        //         <td><img src='".asset('storage/companylogo/'.$comp->logo)."' height='25px'
+        //                 width='25px' /></td>
+        //         <td>
+        //             <a href='#' data-id='".$comp->id."' class='editCompany'><i class='fa-solid fa-pen fa-lg mr-1'
+        //                     style='color:blue'></i></a>
+        //             <a href='#' data-id='".$comp->id."' class='removeCompany'><i
+        //                     class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>
+        //         </td>
+        //     </tr>";
+        //     }
+
+        //     echo $value;
+        // }
         $companyDetails = Company::with('province', 'district', 'vdcormunicipalities')->get();
-        $value = "";
-        if ($companyDetails) {
-            foreach ($companyDetails as $comp) {
-                $value .= "<tr>
-                <td>".$comp->name."</td>
-                <td>".$comp->email."</td>
-                <td>".$comp->website."</td>
-                <td>".$comp->province->provincename." ".$comp->district->districtname." ".
-                    $comp->vdcormunicipalities->municipalityname."</td>
-
-                <td><img src='".asset('storage/companylogo/'.$comp->logo)."' height='25px'
-                        width='25px' /></td>
-                <td>
-                    <a href='#' data-id='".$comp->id."' class='editCompany'><i class='fa-solid fa-pen fa-lg mr-1'
-                            style='color:blue'></i></a>
-                    <a href='#' data-id='".$comp->id."' class='removeCompany'><i
-                            class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>
-                </td>
-            </tr>";
-            }
-
-            echo $value;
+        $companyArray = array();
+        $i = 1;
+        foreach ($companyDetails as $comp) {
+            $companyArray[$i]['count'] = $i++;
+            $companyArray[$i]['name'] = $comp->name;
+            $companyArray[$i]['email'] = $comp->email;
+            $companyArray[$i]['website'] = $comp->website;
+            $companyArray[$i]['address'] = $comp->province->provincename." ".$comp->district->districtname." ".$comp->vdcormunicipalities->municipalityname;
+            $companyArray[$i]['logo'] = asset('storage/companylogo/'.$comp->logo);
+            $companyArray[$i]['action'] = "<a href='#' data-id='".$comp->id."' class='editCompany'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='".$comp->id."' class='removeCompany'><i class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>";
         }
+        return DataTables::of($companyArray)->make(true);
     }
 
     /**

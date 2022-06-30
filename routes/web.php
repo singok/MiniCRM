@@ -18,7 +18,7 @@ Route::controller(CompanyController::class)->prefix('dashboard/companies')->grou
     Route::post('add-company', 'store')->name('companies.add');
     Route::post('districts', 'loadDistricts')->name('companies.districts');
     Route::post('vdcormunicipality', 'loadVdc')->name('companies.vdcormunicipality');
-    Route::post('table/load', 'show')->name('companies.loadtable');
+    Route::get('table/load', 'show')->name('companies.loadtable');
     Route::post('company/delete', 'destroy')->name('companies.delete');
     Route::post('company/edit', 'edit')->name('companies.edit');
 });
@@ -27,7 +27,7 @@ Route::controller(CompanyController::class)->prefix('dashboard/companies')->grou
 Route::controller(EmployeeController::class)->prefix('dashboard/employees')->group(function () {
     Route::get('/', 'index')->name('emloyees.list');
     Route::post('add', 'store')->name('employees.store');
-    Route::post('load', 'show')->name('employees.load');
+    Route::get('load', 'show')->name('employees.load');
     Route::post('remove', 'destroy')->name('employee.remove');
     Route::post('edit', 'edit')->name('employee.edit');
 });

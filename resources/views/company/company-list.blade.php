@@ -147,9 +147,10 @@
                     <!-- /.Left col -->
                     <!-- right col (We are only adding the ID to make the widgets sortable)-->
                     <section class="col-lg-8 connectedSortable border border-primary">
-                        <table class="table">
+                        <table class="table" id="companyTable">
                             <thead>
                                 <tr>
+                                    <th scope="col">SI No.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Website</th>
@@ -217,6 +218,7 @@
 
             // get district value
             $('.selectDistrict').change(function() {
+                alert('h');
                 var districtid = $(this).find('option:selected').val();
                 var infoData = {
                     districtid: districtid
@@ -228,19 +230,39 @@
             });
 
             // load tables
-            function loadTable() {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '{{ route('companies.loadtable') }}',
-                    type: 'POST',
-                    success: function(data) {
-                        $('tbody').html(data);
-                    }
-                });
-            }
-            loadTable();
+            // function loadTable() {
+            //     $.ajax({
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         url: '{{ route('companies.loadtable') }}',
+            //         type: 'POST',
+            //         success: function(data) {
+            //             $('tbody').html(data);
+            //         }
+            //     });
+            // }
+            // loadTable();
+
+            // load company values
+            var table = $('#companyTable').DataTable({
+                processing : true,
+                serverSide : true,
+                order : [[0, 'asc']],
+                ajax : '{{ route('companies.loadtable') }}',
+                columns : [
+                    { data : 'count'},
+                    { data : 'name'},
+                    { data : 'email'},
+                    { data : 'website'},
+                    { data : 'address'},
+                    { data : 'logo',
+                        render : function(data) {
+                            return "<img src=\'"+data+"\' height=\'25px\' width=\'25px\' alt=\'image\'>";
+                        }},
+                    { data : 'action'}
+                ]
+            });
 
             // insert form values
             $('#companyForm').submit(function(e) {
@@ -305,8 +327,9 @@
                                 showConfirmButton: false,
                                 timer: 2000
                             })
+                            table.ajax.reload();
                             $('.resetButton').trigger('click');
-                            loadTable();
+                            // loadTable();
                         }
                     });
                 }
@@ -332,12 +355,11 @@
                         $('input[name="email"]').val(data.companyemail);
                         $('input[name="website"]').val(data.companywebsite);
                         $('.selectedProvince').val(data.companyprovince);
+                        $('.selectedProvince').trigger('change');
+                        $('.saveButton').html('<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
 
-                        $('.saveButton').html(
-                            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
-
-                        $('.selectDistrict').val(data.companydistrict);
-                        $('input[name="logo"]').val(data.companylogo);
+                        // $('.selectDistrict').val(data.companydistrict);
+                        // $('input[name="logo"]').val(data.companylogo);
 
                     }
                 });
@@ -369,7 +391,8 @@
                             },
                             dataType: 'json',
                             success: function(data) {
-                                loadTable();
+                                // loadTable();
+                                table.ajax.reload();
                             }
                         });
                         Swal.fire(

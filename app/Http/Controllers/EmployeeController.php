@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Company;
+use DataTables;
 
 class EmployeeController extends Controller
 {
@@ -77,20 +78,40 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(Request $request)
     {
-        $employees = Employee::with('companies')->get();
-        $empValue = array();
-        $i = 1;
-        foreach($employees as $emp) {
-            $empValue[$i]['count'] = $i++;
-            $empValue[$i]['name'] = $emp->firstname." ".$emp->lastname;
-            $empValue[$i]['company'] = $emp->companies->name;
-            $empValue[$i]['email'] = $emp->email;
-            $empValue[$i]['phone'] = $emp->phone;
-            $empValue[$i]['action'] = "<a href='#' data-id='".$emp->id."' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='".$emp->id."' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>";
+        // $employees = Employee::with('companies')->get();
+        // $empValue = array();
+        // $i = 1;
+        // foreach($employees as $emp) {
+        //     $empValue[$i]['count'] = $i++;
+        //     $empValue[$i]['name'] = $emp->firstname." ".$emp->lastname;
+        //     $empValue[$i]['company'] = $emp->companies->name;
+        //     $empValue[$i]['email'] = $emp->email;
+        //     $empValue[$i]['phone'] = $emp->phone;
+        //     $empValue[$i]['action'] = "<a href='#' data-id='".$emp->id."' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='".$emp->id."' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>";
+        // }
+
+        // return response()->json($empValue);
+
+        if ($request->ajax()) {
+            $employees = Employee::with('companies')->get();
+            $empValue = array();
+            $i = 1;
+            foreach($employees as $emp) {
+                $empValue[$i]['count'] = $i++;
+                $empValue[$i]['name'] = $emp->firstname." ".$emp->lastname;
+                $empValue[$i]['company'] = $emp->companies->name;
+                $empValue[$i]['email'] = $emp->email;
+                $empValue[$i]['phone'] = $emp->phone;
+                $empValue[$i]['action'] = "<a href='#' data-id='".$emp->id."' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='".$emp->id."' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style='color:red'></i></a>";
+            }
+            return DataTables::of($empValue)
+                ->addIndexColumn()
+                ->make(true);
         }
-        return response()->json($empValue);
+
+
 
         // $value = "";
         // if ($employees) {

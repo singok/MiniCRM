@@ -140,6 +140,7 @@
                         <table class="table" id="employeeTable">
                             <thead>
                                 <tr>
+                                    <th scope="col">SI No.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Company</th>
                                     <th scope="col">Email</th>
@@ -174,116 +175,76 @@
     <script>
         $(document).ready(function() {
 
-            // load employee data
-            function loadEmployee() {
+            // // load employee data
+            // function loadEmployee() {
 
-                var url = '{{ route('employees.load') }}'
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-                    },
-                    url: url,
-                    type: 'POST',
-                    success: function(data) {
-                        // $('tbody').html(data);
-                        // var employeeData = data;
-                        // $('#employeeTable').DataTable({
-                        //     data: employeeData,
-                        //     columns: [{
-                        //             data: 'firstname'
-                        //         },
-                        //         {
-                        //             data: 'companies.name'
-                        //         },
-                        //         {
-                        //             data: 'email'
-                        //         },
-                        //         {
-                        //             data: 'phone'
-                        //         },
-                        //         {
-                        //             'data': 'id',
-                        //             "render": function(data, type, row, meta) {
-                        //                 return "<a href='#' data-id='" + data +
-                        //                     "' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='" +
-                        //                     data +
-                        //                     "' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style = 'color:red'></i></a>";
-                        //             }
-                        //         }
-                        //     ]
-                        // });
-                    }
-                });
-            }
+            //     var url = '{{ route('employees.load') }}';
+            //     $.ajax({
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            //         },
+            //         url: url,
+            //         type: 'GET',
+            //         success: function(data) {
+            //             // $('tbody').html(data);
+            //             // var employeeData = data;
+            //             // $('#employeeTable').DataTable({
+            //             //     data: employeeData,
+            //             //     columns: [{
+            //             //             data: 'firstname'
+            //             //         },
+            //             //         {
+            //             //             data: 'companies.name'
+            //             //         },
+            //             //         {
+            //             //             data: 'email'
+            //             //         },
+            //             //         {
+            //             //             data: 'phone'
+            //             //         },
+            //             //         {
+            //             //             'data': 'id',
+            //             //             "render": function(data, type, row, meta) {
+            //             //                 return "<a href='#' data-id='" + data +
+            //             //                     "' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='" +
+            //             //                     data +
+            //             //                     "' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style = 'color:red'></i></a>";
+            //             //             }
+            //             //         }
+            //             //     ]
+            //             // });
+            //         }
+            //     });
+            // }
 
-            loadEmployee();
+            // loadEmployee();
 
-            // dataTables
-            var librarybookdetailtable = $('#employeeTable').DataTable({
-                "sPaginationType": "full_numbers",
-                "bSearchable": false,
-                "lengthMenu": [
-                    [5, 10, 15, 20, 25, -1],
-                    [5, 10, 15, 20, 25, "All"]
-                ],
-                'iDisplayLength': 15,
-                "sDom": 'ltipr',
-                "bAutoWidth": false,
-                "aaSorting": [
-                    [0, 'desc']
-                ],
-                "bSort": false,
-                "bProcessing": true,
-                "bServerSide": true,
-                "sAjaxSource": baseurl + "/library/book/getbookdetail",
-                "oLanguage": {
-                    "sEmptyTable": "<p class='no_data_message'>No data available.</p>"
-                },
-                "aoColumnDefs": [{
-                    "bSortable": false,
-                    "aTargets": [1]
-                }],
-                "aoColumns": [{
-                        "data": "sno"
+            // load employees
+            var table = $('#employeeTable').DataTable({
+                processing: true,
+                serverSide: true,
+                order:[[0, 'ASC']],
+                ajax: '{{ route('employees.load') }}',
+                columns: [{
+                        data: 'count'
                     },
                     {
-                        "data": "name"
+                        data: 'name'
                     },
                     {
-                        "data": "company"
+                        data: 'company'
                     },
                     {
-                        "data": "email"
+                        data: 'email'
                     },
                     {
-                        "data": "phone"
+                        data: 'phone'
                     },
                     {
-                        "data": "action"
-                    },
-                ],
-            }).columnFilter({
-                sPlaceHolder: "head:after",
-                aoColumns: [null,
-                    {
-                        type: "text"
-                    },
-                    {
-                        type: "text"
-                    },
-                    {
-                        type: "text"
-                    },
-                    {
-                        type: "text"
-                    },
-                    {
-                        type: "text"
+                        data: 'action'
                     },
                 ]
             });
-
-            librarybookdetailtable.fnDraw(false);
 
             // reset button
             $('.resetButton').click(function() {
@@ -355,7 +316,7 @@
                                 timer: 2000
                             })
                             $('.resetButton').trigger('click');
-                            loadEmployee();
+                                table.ajax.reload();
                         }
                     });
                 }
@@ -390,7 +351,7 @@
                             },
                             type: 'POST',
                             success: function(data) {
-                                loadEmployee();
+                                table.ajax.reload();
                             }
                         });
 
@@ -429,8 +390,7 @@
                         $('.selectCompany').val(data.employeecompany);
                         $('input[type="hidden"]').val(data.employeeid);
 
-                        $('.saveButton').html(
-                            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
+                        $('.saveButton').html('<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
                     }
                 });
             });
