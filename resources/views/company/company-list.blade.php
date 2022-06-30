@@ -218,7 +218,6 @@
 
             // get district value
             $('.selectDistrict').change(function() {
-                alert('h');
                 var districtid = $(this).find('option:selected').val();
                 var infoData = {
                     districtid: districtid
