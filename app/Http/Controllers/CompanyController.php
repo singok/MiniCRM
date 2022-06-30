@@ -83,8 +83,7 @@ class CompanyController extends Controller
             ]);
             if(!empty($fileStored) && !empty($info)) {
                 return response()->json([
-                    'status' => 200,
-                    'success' => 'Data Inserted Successfully'
+                    'success' => 'Company details inserted.'
                 ]);
             }
         } else {
@@ -107,8 +106,7 @@ class CompanyController extends Controller
             ]);
             if(!empty($fileStored) && !empty($info)) {
                 return response()->json([
-                    'status' => 200,
-                    'success' => 'Data Updated Successfully'
+                    'success' => 'Company details has been updated.'
                 ]);
             }
         }

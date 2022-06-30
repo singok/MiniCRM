@@ -16,7 +16,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employees</li>
                         </ol>
                     </div><!-- /.col -->
@@ -101,7 +101,7 @@
                                             </div>
                                         @enderror
                                         <div class="input-group mb-2">
-                                            <input type="number" class="form-control" placeholder="Phone Number"
+                                            <input type="text" class="form-control" placeholder="Phone Number"
                                                 name="phone">
 
                                         </div>
@@ -122,7 +122,7 @@
                                             <!-- /.col -->
                                             <div class="col-4">
                                                 <button type="submit" class="btn btn-primary btn-block saveButton"><i
-                                                        class="fa-solid fa-floppy-disk""></i>&nbsp;&nbsp;Save</button>
+                                                        class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save</button>
                                             </div>
                                             <!-- /.col -->
                                         </div>
@@ -190,6 +190,12 @@
 
             loadEmployee();
 
+            // reset button
+            $('.resetButton').click(function() {
+                $('.saveButton').html('<i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save');
+                $('input[name="employeeid"]').val('');
+            });
+
             // insert employee data
             $('#employeeForm').submit(function(e) {
                 e.preventDefault();
@@ -246,8 +252,14 @@
                         processData: false,
                         contentType: false,
                         success: function(data) {
-                            alert(data.success);
-                            $('#employeeForm').find('input').val('');
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: data.success,
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                            $('.resetButton').trigger('click');
                             loadEmployee();
                         }
                     });
@@ -289,7 +301,7 @@
 
                         Swal.fire(
                             'Deleted!',
-                            'Your file has been deleted.',
+                            'Employee detail has been deleted.',
                             'success'
                         )
                     }
@@ -321,6 +333,9 @@
                         $('input[name="phone"]').val(data.employeephone);
                         $('.selectCompany').val(data.employeecompany);
                         $('input[type="hidden"]').val(data.employeeid);
+
+                        $('.saveButton').html(
+                            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
                     }
                 });
             });

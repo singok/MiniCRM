@@ -48,7 +48,7 @@ class EmployeeController extends Controller
 
             if ($info) {
                 return response()->json([
-                    'success' => 'Employee Details Inserted Successfully.'
+                    'success' => 'Employee details has been added.'
                 ]);
             }
         }
@@ -65,7 +65,7 @@ class EmployeeController extends Controller
 
             if ($info) {
                 return response()->json([
-                    'success' => 'Employee Details Updated Successfully.'
+                    'success' => 'Employee details has been updated.'
                 ]);
             }
         }

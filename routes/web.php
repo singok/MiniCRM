@@ -10,10 +10,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*--------------------Company Controller---------------------*/
-Route::controller(CompanyController::class)->prefix('admin/companies')->group(function () {
+Route::controller(CompanyController::class)->prefix('dashboard/companies')->group(function () {
     Route::get('/', 'index')->name('companies.list');
     Route::post('add-company', 'store')->name('companies.add');
     Route::post('districts', 'loadDistricts')->name('companies.districts');
@@ -24,7 +24,7 @@ Route::controller(CompanyController::class)->prefix('admin/companies')->group(fu
 });
 
 /*---------------------Employee Controller-------------------*/
-Route::controller(EmployeeController::class)->prefix('admin/employees')->group(function () {
+Route::controller(EmployeeController::class)->prefix('dashboard/employees')->group(function () {
     Route::get('/', 'index')->name('emloyees.list');
     Route::post('add', 'store')->name('employees.store');
     Route::post('load', 'show')->name('employees.load');

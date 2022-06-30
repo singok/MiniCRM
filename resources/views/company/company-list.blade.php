@@ -16,7 +16,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Companies</li>
                         </ol>
                     </div><!-- /.col -->
@@ -132,7 +132,7 @@
                                             <!-- /.col -->
                                             <div class="col-4">
                                                 <button type="submit" class="btn btn-primary btn-block saveButton"><i
-                                                        class="fa-solid fa-floppy-disk""></i>&nbsp;&nbsp;Save</button>
+                                                        class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save</button>
                                             </div>
                                             <!-- /.col -->
                                         </div>
@@ -183,6 +183,13 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+            // reset button
+            $('.resetButton').click(function() {
+                $('.saveButton').html('<i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save');
+                $('input[name="comid"]').val('');
+            });
+
 
             // get loaded data
             function getOptions(infoData, url) {
@@ -291,8 +298,14 @@
                         processData: false,
                         contentType: false,
                         success: function(data) {
-                            $('#companyForm').find('input').val('');
-                            alert(data.success);
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: data.success,
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                            $('.resetButton').trigger('click');
                             loadTable();
                         }
                     });
@@ -319,13 +332,16 @@
                         $('input[name="email"]').val(data.companyemail);
                         $('input[name="website"]').val(data.companywebsite);
                         $('.selectedProvince').val(data.companyprovince);
+
+                        $('.saveButton').html(
+                            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
+
                         $('.selectDistrict').val(data.companydistrict);
                         $('input[name="logo"]').val(data.companylogo);
+
                     }
                 });
             });
-
-
 
             // delete company detail
             $(document).on('click', '.removeCompany', function(e) {
@@ -358,7 +374,7 @@
                         });
                         Swal.fire(
                             'Deleted!',
-                            'Your file has been deleted.',
+                            'Company detail has been deleted.',
                             'success'
                         )
                     }
