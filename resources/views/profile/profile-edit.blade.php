@@ -76,9 +76,12 @@
         $(document).ready(function () {
 
             // disable fields initially
-            $('.updateButton').attr('disabled', 'disabled');
-            $('.new-pass').attr('disabled', 'disabled');
-            $('.confirm-pass').attr('disabled', 'disabled');
+            function disableFields() {
+                $('.updateButton').attr('disabled', 'disabled');
+                $('.new-pass').attr('disabled', 'disabled');
+                $('.confirm-pass').attr('disabled', 'disabled');
+            }
+            disableFields();
 
             // check old password
             $('.current-pass').on('keyup', function () {
@@ -104,6 +107,8 @@
                             $('#oldPasswordMessage').removeClass('text-success');
                             $('#oldPasswordMessage').addClass('text-danger');
                             $('#oldPasswordMessage').html(data.message);
+                            $('#confirmPasswordMessage').html("");
+                            $('#newPasswordMessage').html('');
 
                             // disable fields
                             $('.new-pass').attr('disabled', 'disabled');
@@ -172,6 +177,7 @@
                             })
                             $('#profileForm')[0].reset();
                             $('#confirmPasswordMessage').html("");
+                            disableFields();
                         } else if (data.status == 'N') {
                             Swal.fire({
                                 position: 'center',
