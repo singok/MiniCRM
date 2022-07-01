@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,4 +31,10 @@ Route::controller(EmployeeController::class)->prefix('dashboard/employees')->gro
     Route::get('load', 'show')->name('employees.load');
     Route::post('remove', 'destroy')->name('employee.remove');
     Route::post('edit', 'edit')->name('employee.edit');
+});
+
+Route::controller(ProfileController::class)->prefix('dashboard/profile')->group(function () {
+    Route::get('/', 'index')->name('profile.index');
+    Route::post('password/check', 'check')->name('profile-password.check');
+    Route::post('password/update', 'update')->name('profile.update');
 });

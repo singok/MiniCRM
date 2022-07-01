@@ -54,8 +54,7 @@
         .error {
             color: red;
             width: 100%;
-            font-size: 14px;
-            font-style: italic;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -117,6 +116,15 @@
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Employees
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('profile.index') }}"
+                                class="nav-link @if (Request::routeIs('profile.index')) active @endif">
+                                <i class="fa-solid fa-user p-1"></i>
+                                <p>
+                                    Profile
                                 </p>
                             </a>
                         </li>

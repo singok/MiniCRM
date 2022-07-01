@@ -146,23 +146,25 @@
                     </section>
                     <!-- /.Left col -->
                     <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                    <section class="col-lg-8 connectedSortable border border-primary">
-                        <table class="table" id="companyTable">
-                            <thead>
-                                <tr>
-                                    <th scope="col">SI No.</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Website</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Logo</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Data goes here -->
-                            </tbody>
-                        </table>
+                    <section class="col-lg-8 card">
+                        <div class="card-body">
+                            <table class="table dataTables_wrapper dt-bootstrap4" id="companyTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">SI No.</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Website</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Logo</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data goes here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </section>
                     <!-- right col -->
                 </div>

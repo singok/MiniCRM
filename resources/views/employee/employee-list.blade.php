@@ -142,16 +142,6 @@
                                                 </thead>
                                                 <tbody>
                                                 </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th rowspan="1" colspan="1">SI No.</th>
-                                                        <th rowspan="1" colspan="1">Employee Name</th>
-                                                        <th rowspan="1" colspan="1">Company</th>
-                                                        <th rowspan="1" colspan="1">Email</th>
-                                                        <th rowspan="1" colspan="1">Phone</th>
-                                                        <th rowspan="1" colspan="1">Action</th>
-                                                    </tr>
-                                                </tfoot>
                                             </table>
                                         </div>
                                     </div>
