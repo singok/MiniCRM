@@ -278,7 +278,9 @@
                         province: "required",
                         district: "required",
                         vdcormunicipality: "required",
-                        logo: "required",
+                        logo: {
+                            required : true
+                        },
                     },
                     messages: {
                         name: {

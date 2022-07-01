@@ -25,139 +25,145 @@
         </div>
         <!-- /.content-header -->
 
-        <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <!-- Main row -->
                 <div class="row">
-                    <!-- Left col -->
-                    <section class="col-lg-4 connectedSortable">
-                        <div class="login-box">
-                            @if (Session::has('success'))
-                                <div class="alert-success">
-                                    {{ Session::get('success') }}
-                                </div>
-                            @elseif (Session::has('error'))
-                                <div class="alert-danger">
-                                    {{ Session::get('error') }}
-                                </div>
-                            @endif
-                            <!-- /.login-logo -->
-                            <div class="card card-outline card-primary">
-                                <div class="card-header text-center">
-                                    <span class="h4"><b>Add/edit employee</b></span>
-                                </div>
-                                <div class="card-body">
-                                    <form method="POST" id="employeeForm">
-                                        <input type="hidden" name="employeeid">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="input-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="First Name"
-                                                        name="firstname">
 
-                                                </div>
-                                                @error('firstname')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                            <div class="col">
-                                                <div class="input-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Last Name"
-                                                        name="lastname">
+                    <div class="col-md-4">
 
-                                                </div>
-                                                @error('lastname')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="input-group mb-2">
-                                            <select class="form-select selectCompany" aria-label="Default select example"
-                                                name="company">
-                                                <option value="" selected>Select Company...</option>
-                                                @foreach ($dataInfo as $info)
-                                                    <option value="{{ $info->id }}">{{ $info->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        @error('company')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                        <div class="input-group mb-2">
-                                            <input type="email" class="form-control" placeholder="Email" name="email">
-
-                                        </div>
-                                        @error('email')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                        <div class="input-group mb-2">
-                                            <input type="text" class="form-control" placeholder="Phone Number"
-                                                name="phone">
-
-                                        </div>
-                                        @error('phone')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                        <div class="row">
-                                            <!-- /.col -->
-                                            <div class="col-4">
-                                                <button type="reset" class="btn btn-secondary btn-block resetButton"><i
-                                                        class="fa-solid fa-rotate-left"></i>&nbsp;&nbsp;Reset</button>
-                                            </div>
-                                            <!-- /.col -->
-                                            <div class="col-4"></div>
-                                            <!-- /.col -->
-                                            <div class="col-4">
-                                                <button type="submit" class="btn btn-primary btn-block saveButton"><i
-                                                        class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save</button>
-                                            </div>
-                                            <!-- /.col -->
-                                        </div>
-                                    </form>
-
-                                </div>
-                                <!-- /.card-body -->
+                        <div class="card card-primary" id="addEditForm">
+                            <div class="card-header">
+                                <h3 class="card-title" id="formTitle">Add Employee</h3>
                             </div>
-                            <!-- /.card -->
-                        </div>
-                    </section>
-                    <!-- /.Left col -->
-                    <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                    <section class="col-lg-8 connectedSortable border border-warning">
-                        <table class="table" id="employeeTable">
-                            <thead>
-                                <tr>
-                                    <th scope="col">SI No.</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Company</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone Number</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Data goes here -->
-                            </tbody>
-                        </table>
+                            <form id='employeeForm' action="POST">
+                                <input type="hidden" class="form-control hiddenid" name="employeeid">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="form-group col-6">
+                                            <label for="firstname">First name</label>
+                                            <input type="text" class="form-control" name="firstname" id="firstname"
+                                                placeholder="Enter first name">
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="lastname">Last name</label>
+                                            <input type="text" class="form-control" name="lastname" id="lastname"
+                                                placeholder="Enter last name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Email address</label>
+                                        <input type="email" class="form-control" name="email" id="exampleInputEmail1"
+                                            placeholder="Enter email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Company</label>
+                                        <select class="form-control selectCompany" name="company">
+                                            <option value="" selected>Select company...</option>
+                                            @foreach ($dataInfo as $info)
+                                                <option value="{{ $info->id }}">{{ $info->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" class="form-control" name="phone" id="phone"
+                                            placeholder="Enter phone number">
+                                    </div>
+                                </div>
 
-                    </section>
-                    <!-- right col -->
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <!-- /.col -->
+                                        <div class="col-4">
+                                            <button type="reset" class="btn btn-secondary btn-block resetButton"><i
+                                                    class="fa-solid fa-rotate-left"></i>&nbsp;&nbsp;Reset</button>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-4"></div>
+                                        <!-- /.col -->
+                                        <div class="col-4">
+                                            <button type="submit" class="btn btn-primary btn-block saveButton"><i
+                                                    class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save</button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Employees List</h3>
+                            </div>
+
+                            <div class="card-body">
+                                <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6"></div>
+                                        <div class="col-sm-12 col-md-6"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="employeeTable"
+                                                class="table table-bordered table-hover dataTable dtr-inline"
+                                                aria-describedby="example2_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sorting sorting_asc" tabindex="0"
+                                                            aria-controls="example2" rowspan="1" colspan="1"
+                                                            aria-sort="ascending"
+                                                            aria-label="Rendering engine: activate to sort column descending">
+                                                            SI No.</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example2"
+                                                            rowspan="1" colspan="1"
+                                                            aria-label="Browser: activate to sort column ascending">Employee
+                                                            Name
+                                                        </th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example2"
+                                                            rowspan="1" colspan="1"
+                                                            aria-label="Platform(s): activate to sort column ascending">
+                                                            Company</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example2"
+                                                            rowspan="1" colspan="1"
+                                                            aria-label="Engine version: activate to sort column ascending">
+                                                            Email</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example2"
+                                                            rowspan="1" colspan="1"
+                                                            aria-label="CSS grade: activate to sort column ascending">Phone
+                                                        </th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example2"
+                                                            rowspan="1" colspan="1"
+                                                            aria-label="CSS grade: activate to sort column ascending">
+                                                            Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th rowspan="1" colspan="1">SI No.</th>
+                                                        <th rowspan="1" colspan="1">Employee Name</th>
+                                                        <th rowspan="1" colspan="1">Company</th>
+                                                        <th rowspan="1" colspan="1">Email</th>
+                                                        <th rowspan="1" colspan="1">Phone</th>
+                                                        <th rowspan="1" colspan="1">Action</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
-                <!-- /.row (main row) -->
-            </div><!-- /.container-fluid -->
+
+            </div>
         </section>
         <!-- /.content -->
     </div>
@@ -175,55 +181,14 @@
     <script>
         $(document).ready(function() {
 
-            // // load employee data
-            // function loadEmployee() {
-
-            //     var url = '{{ route('employees.load') }}';
-            //     $.ajax({
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-            //         },
-            //         url: url,
-            //         type: 'GET',
-            //         success: function(data) {
-            //             // $('tbody').html(data);
-            //             // var employeeData = data;
-            //             // $('#employeeTable').DataTable({
-            //             //     data: employeeData,
-            //             //     columns: [{
-            //             //             data: 'firstname'
-            //             //         },
-            //             //         {
-            //             //             data: 'companies.name'
-            //             //         },
-            //             //         {
-            //             //             data: 'email'
-            //             //         },
-            //             //         {
-            //             //             data: 'phone'
-            //             //         },
-            //             //         {
-            //             //             'data': 'id',
-            //             //             "render": function(data, type, row, meta) {
-            //             //                 return "<a href='#' data-id='" + data +
-            //             //                     "' class='editEmployee'><i class='fa-solid fa-pen fa-lg mr-1' style='color:blue'></i></a><a href='#' data-id='" +
-            //             //                     data +
-            //             //                     "' class='removeEmployee'><i class='fa-solid fa-delete-left fa-lg ml-1' style = 'color:red'></i></a>";
-            //             //             }
-            //             //         }
-            //             //     ]
-            //             // });
-            //         }
-            //     });
-            // }
-
-            // loadEmployee();
-
             // load employees
             var table = $('#employeeTable').DataTable({
                 processing: true,
                 serverSide: true,
-                order:[[0, 'ASC']],
+                scrollY: 400,
+                order: [
+                    [0, 'ASC']
+                ],
                 ajax: '{{ route('employees.load') }}',
                 columns: [{
                         data: 'count'
@@ -250,6 +215,11 @@
             $('.resetButton').click(function() {
                 $('.saveButton').html('<i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save');
                 $('input[name="employeeid"]').val('');
+                $('#addEditForm').removeClass('card-warning');
+                $('#addEditForm').addClass('card-primary');
+                $('#formTitle').html('Add Employee');
+                $('.saveButton').removeClass('btn-warning');
+                $('.saveButton').addClass('btn-primary');
             });
 
             // insert employee data
@@ -316,7 +286,7 @@
                                 timer: 2000
                             })
                             $('.resetButton').trigger('click');
-                                table.ajax.reload();
+                            table.ajax.reload();
                         }
                     });
                 }
@@ -391,6 +361,11 @@
                         $('input[type="hidden"]').val(data.employeeid);
 
                         $('.saveButton').html('<i class="fa-solid fa-pen-to-square"></i>&nbsp;Update');
+                        $('.saveButton').removeClass('btn-primary');
+                        $('.saveButton').addClass('btn-warning');
+                        $('#addEditForm').removeClass('card-primary');
+                        $('#addEditForm').addClass('card-warning');
+                        $('#formTitle').html('Edit Employee');
                     }
                 });
             });
